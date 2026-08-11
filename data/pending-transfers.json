@@ -60,16 +60,36 @@
       "player": "Ronald Araújo",
       "fromClub": "Barcelona",
       "toClub": "Liverpool",
-      "status": "pending",
-      "note": "Reported move — fee not reported",
-      "source": "Press reports"
+      "status": "confirmed",
+      "note": "Completed transfer",
+      "source": "Press reports",
+      "feeEurM": 55
     },
     {
       "player": "Zion Suzuki",
       "fromClub": "Parma",
       "toClub": "Paris Saint-Germain",
+      "status": "confirmed",
+      "note": "Completed transfer",
+      "source": "Press reports",
+      "feeEurM": 35
+    },
+    {
+      "player": "Rodri",
+      "fromClub": "Manchester City",
+      "toClub": "Barcelona / Real Madrid",
+      "feeEurM": 80,
       "status": "pending",
-      "note": "Reported move — fee not reported",
+      "note": "Possible move — destination undecided",
+      "source": "Press reports"
+    },
+    {
+      "player": "Ferran Torres",
+      "fromClub": "Barcelona",
+      "toClub": "Paris Saint-Germain",
+      "feeEurM": 50,
+      "status": "pending",
+      "note": "Reported talks",
       "source": "Press reports"
     }
   ]
