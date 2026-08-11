@@ -265,6 +265,22 @@ Stadium photography from Wikimedia is still implemented in
 [`venue-photos.ts`](src/lib/venue-photos.ts) and is no longer wired into the board. Re-enable it in
 `board.ts` if you ever want photos back.
 
+## Refreshing in production
+
+Vercel runs `GET /api/cron/refresh` once a day (`vercel.json`). Two things make that
+work, both easy to get wrong:
+
+- **Vercel invokes cron with GET, not POST.** The route exports both; exporting only
+  POST means the scheduled job quietly 405s and never runs.
+- **Vercel attaches `Authorization: Bearer $CRON_SECRET` itself**, reading the value
+  straight from the project's environment variables. So the only requirement is that
+  `CRON_SECRET` exists on the Vercel project — there is nothing to keep in sync
+  anywhere else.
+
+Once a day is the ceiling on Vercel's Hobby plan; anything more frequent is rejected
+at deploy time. If you need prices fresher than that, either move to Pro or point an
+external scheduler at the same endpoint with `Authorization: Bearer <your secret>`.
+
 ## Deploying
 
 `vercel.json` runs the refresh every 2 hours. Set all env vars including `CRON_SECRET` in the Vercel

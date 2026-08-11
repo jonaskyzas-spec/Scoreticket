@@ -47,7 +47,9 @@
       "Bash(git remote *)",
       "Bash(python3 -c ' *)",
       "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 90)",
-      "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 300)"
+      "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 300)",
+      "Bash(dig +short A scoreticket.eu @8.8.8.8)",
+      "Bash(dig +short A scoreticket.eu @1.1.1.1)"
     ]
   }
 }
