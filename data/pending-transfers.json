@@ -46,6 +46,31 @@
       "status": "denied",
       "note": "Reported €170m+ — denied by the clubs",
       "source": "Press reports"
+    },
+    {
+      "player": "Yan Diomande",
+      "fromClub": "RB Leipzig",
+      "toClub": "Real Madrid",
+      "status": "confirmed",
+      "note": "Completed transfer",
+      "source": "Press reports",
+      "feeEurM": 140
+    },
+    {
+      "player": "Ronald Araújo",
+      "fromClub": "Barcelona",
+      "toClub": "Liverpool",
+      "status": "pending",
+      "note": "Reported move — fee not reported",
+      "source": "Press reports"
+    },
+    {
+      "player": "Zion Suzuki",
+      "fromClub": "Parma",
+      "toClub": "Paris Saint-Germain",
+      "status": "pending",
+      "note": "Reported move — fee not reported",
+      "source": "Press reports"
     }
   ]
 }

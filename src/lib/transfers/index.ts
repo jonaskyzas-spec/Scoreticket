@@ -47,16 +47,26 @@ async function readPending(): Promise<Transfer[]> {
     return (parsed.transfers ?? [])
       .filter((t) => t.player && t.fromClub && t.toClub)
       .map((t) => {
-        const status: Transfer['status'] = t.status === 'denied' ? 'denied' : 'pending';
+        const status: Transfer['status'] =
+          t.status === 'denied' ? 'denied' : t.status === 'confirmed' ? 'confirmed' : 'pending';
+
+        /*
+         * Only reported fees get the "~". A confirmed fee is a settled number,
+         * so prefixing it with a tilde would understate what we actually know —
+         * and a denied deal's figure is only ever what was claimed.
+         */
+        const feeLabel = t.feeEurM
+          ? status === 'confirmed'
+            ? `€${t.feeEurM}m`
+            : `~€${t.feeEurM}m`
+          : 'Fee TBC';
 
         return {
           id: slug(t.player as string, t.fromClub as string, t.toClub as string),
           player: t.player as string,
           fromClub: t.fromClub as string,
           toClub: t.toClub as string,
-          // Reported fees are not agreed fees — the "~" keeps that visible, and
-          // a denied story's number is only ever what was claimed.
-          feeLabel: t.feeEurM ? `~€${t.feeEurM}m` : 'Fee TBC',
+          feeLabel,
           feeEurM: t.feeEurM ?? 0,
           date: null,
           status,
@@ -92,12 +102,19 @@ async function build(): Promise<Transfer[]> {
   const confirmedIds = new Set(confirmed.map((t) => t.id));
   const rumours = pending.filter((t) => !confirmedIds.has(t.id));
 
-  // Live stories lead, then knocked-down ones, then completed deals by fee.
-  // Denied sits ahead of confirmed so hand-added entries are never squeezed out
-  // by the MAX_SHOWN cut.
+  /*
+   * Live stories lead, then knocked-down ones, then completed deals by fee.
+   * Hand-added entries all sort ahead of the scraped ones so they're never
+   * squeezed out by the MAX_SHOWN cut.
+   *
+   * Note the third group: an entry in the manual file can be marked
+   * 'confirmed' (a deal Wikipedia hasn't recorded yet). Filtering the manual
+   * list only for pending/denied silently dropped those.
+   */
   const merged = [
     ...rumours.filter((t) => t.status === 'pending'),
     ...rumours.filter((t) => t.status === 'denied'),
+    ...rumours.filter((t) => t.status === 'confirmed'),
     ...confirmed,
   ].slice(0, MAX_SHOWN);
 
