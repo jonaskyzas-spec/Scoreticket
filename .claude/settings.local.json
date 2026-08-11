@@ -39,7 +39,13 @@
       "Bash(curl -s -o /dev/null --max-time 10 http://localhost:3000/demo)",
       "Bash(curl -s -o /dev/null -w \"demo=%{http_code}\\\\n\" http://localhost:3000/demo --max-time 150)",
       "Bash(curl -s -o /dev/null -w \"localhost:3000 -> %{http_code}\\\\n\" http://localhost:3000/ --max-time 20)",
-      "Bash(lsof -nP -iTCP:3000 -sTCP:LISTEN)"
+      "Bash(lsof -nP -iTCP:3000 -sTCP:LISTEN)",
+      "Bash(git -c user.name=Jonas -c user.email=jonaskyzas@gmail.com commit -q -m ' *)",
+      "Bash(curl -s -o /dev/null -w \"local site back up -> %{http_code}\\\\n\" http://localhost:3000/ --max-time 120)",
+      "Bash(curl -s -o /dev/null -w \"  github page -> %{http_code}\\\\n\" https://github.com/jonaskyzas-spec/Scoreticket --max-time 30)",
+      "Bash(git ls-remote *)",
+      "Bash(git remote *)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }
