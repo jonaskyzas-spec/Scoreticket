@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+
+# local env
+.env
+.env.local
+.env*.local
+
+# scraper cache + circuit-breaker state
+.cache/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# vercel
+.vercel

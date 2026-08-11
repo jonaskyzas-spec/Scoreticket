@@ -1,0 +1,31 @@
+{
+  "name": "scoreticket",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "refresh": "tsx scripts/refresh.ts",
+    "refresh:fixtures": "tsx scripts/refresh.ts --fixtures-only",
+    "probe": "tsx scripts/probe.ts",
+    "verify": "tsx scripts/verify-parsers.ts",
+    "snapshot": "tsx scripts/snapshot.ts"
+  },
+  "dependencies": {
+    "next": "^16.3.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "22.15.3",
+    "@types/react": "19.1.1",
+    "@types/react-dom": "19.1.1",
+    "tailwindcss": "4.1.13",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3"
+  }
+}

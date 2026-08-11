@@ -1,0 +1,51 @@
+{
+  "_comment": [
+    "Pending / reported transfers, shown with an amber PENDING badge.",
+    "",
+    "This file is edited by hand on purpose. Confirmed deals are scraped from",
+    "Wikipedia, but there is no trustworthy structured feed for rumours —",
+    "goal.com and the rest are editorial headlines, and deriving 'player X to",
+    "club Y for Z' from a headline produces wrong data that still looks",
+    "authoritative on the page. So pending deals are only ever what you put",
+    "here.",
+    "",
+    "Fields: player, fromClub, toClub, feeEurM (approximate is fine), note",
+    "(what stage it's at), source (where you read it), and status.",
+    "",
+    "status is one of:",
+    "  'pending' (default) — amber, deal may still happen",
+    "  'denied'            — red, the clubs or player have knocked the story down",
+    "",
+    "Delete a pending entry once it's confirmed — the scraper will pick it up",
+    "from Wikipedia on the next refresh and it'll turn green automatically."
+  ],
+  "transfers": [
+    {
+      "player": "Julián Álvarez",
+      "fromClub": "Atletico Madrid",
+      "toClub": "Barcelona",
+      "feeEurM": 90,
+      "status": "pending",
+      "note": "Reported talks — fee not agreed",
+      "source": "Press reports"
+    },
+    {
+      "player": "Endrick",
+      "fromClub": "Real Madrid",
+      "toClub": "Aston Villa",
+      "feeEurM": 50,
+      "status": "pending",
+      "note": "Possible move — reported interest",
+      "source": "Press reports"
+    },
+    {
+      "player": "Vinícius Júnior",
+      "fromClub": "Real Madrid",
+      "toClub": "Arsenal",
+      "feeEurM": 170,
+      "status": "denied",
+      "note": "Reported €170m+ — denied by the clubs",
+      "source": "Press reports"
+    }
+  ]
+}

@@ -1,0 +1,503 @@
+@import 'tailwindcss';
+
+/*
+ * Scoreticket — futuristic dark theme.
+ *
+ * Deliberately dark-first: the whole design is built around neon accents and
+ * glow, which only read correctly on a dark ground. A light mode is provided
+ * for accessibility but is intentionally calmer.
+ */
+
+:root {
+  --bg: #05070d;
+  --bg-2: #080d18;
+  --panel: rgba(18, 26, 43, 0.72);
+  --panel-solid: #0e1524;
+  --border: rgba(94, 234, 212, 0.14);
+  --border-strong: rgba(94, 234, 212, 0.34);
+  --text: #e8f1ff;
+  --muted: #8ea3c0;
+  --accent: #34f5c5;
+  --accent-2: #4d9fff;
+  --accent-3: #b06bff;
+  --glow: 0 0 24px rgba(52, 245, 197, 0.35);
+  --radius: 16px;
+  --danger: #ff5470;
+  --danger-dim: rgba(255, 84, 112, 0.14);
+  --ok: #2fe08a;
+  --ok-dim: rgba(47, 224, 138, 0.14);
+  --warn: #ffb020;
+  --warn-dim: rgba(255, 176, 32, 0.14);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f4f7fb;
+    --bg-2: #eaf0f8;
+    --panel: rgba(255, 255, 255, 0.86);
+    --panel-solid: #ffffff;
+    --border: rgba(15, 42, 66, 0.12);
+    --border-strong: rgba(15, 42, 66, 0.24);
+    --text: #08131f;
+    --muted: #5a6b80;
+    --accent: #00a37a;
+    --accent-2: #1a6dd8;
+    --accent-3: #7a3fd0;
+    --glow: 0 0 18px rgba(0, 163, 122, 0.18);
+    --danger: #d92d4e;
+    --danger-dim: rgba(217, 45, 78, 0.1);
+    --ok: #0f9d58;
+    --ok-dim: rgba(15, 157, 88, 0.12);
+    --warn: #b26a00;
+    --warn-dim: rgba(178, 106, 0, 0.12);
+  }
+}
+
+/* Transfer ticker: horizontal scroll without a visible scrollbar. */
+.tx-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tx-rail::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/*
+ * Ambient gradients + pitch grid live on a single fixed layer behind the
+ * content.
+ *
+ * These were originally painted straight onto <body> with
+ * `background-attachment: fixed`, which forces the whole page onto a slow
+ * compositing path — and in practice made every scrolled viewport render as a
+ * black rectangle. A fixed pseudo-element at z-index -1 gives the identical
+ * parallax-free look without touching the content's compositing layer.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(1100px 620px at 12% -8%, rgba(77, 159, 255, 0.16), transparent 60%),
+    radial-gradient(900px 520px at 88% 0%, rgba(176, 107, 255, 0.14), transparent 62%),
+    radial-gradient(800px 800px at 50% 108%, rgba(52, 245, 197, 0.1), transparent 60%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+}
+
+/* Faint pitch grid — reads as a tactical display rather than a texture. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(94, 234, 212, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 234, 212, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* ---------- surfaces ---------- */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border-radius: var(--radius);
+}
+
+.panel-hover {
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.panel-hover:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow:
+    0 18px 44px -22px rgba(0, 0, 0, 0.85),
+    var(--glow);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* ---------- type ---------- */
+
+.display {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.gradient-text {
+  background: linear-gradient(96deg, var(--accent) 0%, var(--accent-2) 46%, var(--accent-3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* ---------- controls ---------- */
+
+.chip {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 999px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.chip:hover {
+  border-color: var(--border-strong);
+}
+
+.chip-active {
+  color: #04121a;
+  border-color: transparent;
+  box-shadow: var(--glow);
+}
+
+.btn-glow {
+  background: linear-gradient(96deg, var(--accent), var(--accent-2));
+  color: #04121a;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px -8px rgba(52, 245, 197, 0.7);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.07);
+  box-shadow: 0 10px 26px -8px rgba(52, 245, 197, 0.85);
+}
+
+.hairline {
+  border-color: var(--border);
+}
+
+/* ---------- hero ---------- */
+
+.hero-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  isolation: isolate;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(100deg, rgba(5, 7, 13, 0.94) 8%, rgba(5, 7, 13, 0.66) 46%, rgba(5, 7, 13, 0.34) 100%),
+    radial-gradient(700px 320px at 82% 22%, rgba(52, 245, 197, 0.2), transparent 65%);
+}
+
+@media (prefers-color-scheme: light) {
+  .hero-scrim {
+    background:
+      linear-gradient(100deg, rgba(244, 247, 251, 0.95) 8%, rgba(244, 247, 251, 0.72) 48%, rgba(244, 247, 251, 0.4) 100%),
+      radial-gradient(700px 320px at 82% 22%, rgba(0, 163, 122, 0.16), transparent 65%);
+  }
+}
+
+/* Light sweep across the hero — the "stadium floodlight" pass. */
+.sweep::after {
+  content: '';
+  position: absolute;
+  inset: -40% -60%;
+  z-index: 2;
+  background: linear-gradient(
+    75deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 58%
+  );
+  animation: sweep 7s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0%,
+  100% {
+    transform: translateX(-38%);
+  }
+  50% {
+    transform: translateX(38%);
+  }
+}
+
+/* Score-ticker pulse on the live dot. */
+.pulse-dot {
+  position: relative;
+}
+
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  opacity: 0.65;
+  animation: pulse 2.1s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+
+/* ---------- book-a-demo CTA ---------- */
+
+/*
+ * Bouncing attract-loop on the demo pill.
+ *
+ * Pauses while the panel is open (a control that keeps hopping after you've
+ * engaged with it is just noise) and on hover, so it holds still while being
+ * clicked.
+ */
+.bouncy {
+  animation: bouncy 2.4s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+}
+
+/* Hold still while it's being aimed at and clicked. */
+.demo-halo:hover .bouncy {
+  animation-play-state: paused;
+}
+
+@keyframes bouncy {
+  0%,
+  22%,
+  44%,
+  100% {
+    transform: translateY(0);
+  }
+  12% {
+    transform: translateY(-9px);
+  }
+  32% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Halo that breathes behind the pill, in the same mint as the prices. */
+.demo-halo::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(52, 245, 197, 0.4), transparent);
+  opacity: 0.55;
+  z-index: -1;
+  animation: halo 2.4s ease-in-out infinite;
+}
+
+@keyframes halo {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+}
+
+/* ---------- welcome page backdrop ---------- */
+
+/*
+ * A full-page ambient layer used ONLY on the welcome page — deliberately a
+ * different visual language from the tactics-board pitch on /fixtures, which
+ * stays exclusive to that section.
+ *
+ * Three slow-drifting aurora blobs plus footballs floating up through the
+ * viewport. Fixed and behind the content, so it runs continuously behind every
+ * section of the page rather than being boxed into a hero.
+ *
+ * Everything animates on transform/opacity only, so it stays on the compositor
+ * and doesn't repaint the page.
+ */
+.welcome-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.aurora-1 {
+  width: 46vw;
+  height: 46vw;
+  left: -8vw;
+  top: -6vw;
+  background: radial-gradient(circle, rgba(52, 245, 197, 0.55), transparent 68%);
+  animation: drift1 26s ease-in-out infinite;
+}
+
+.aurora-2 {
+  width: 40vw;
+  height: 40vw;
+  right: -6vw;
+  top: 12vh;
+  background: radial-gradient(circle, rgba(77, 159, 255, 0.5), transparent 68%);
+  animation: drift2 32s ease-in-out infinite;
+}
+
+.aurora-3 {
+  width: 44vw;
+  height: 44vw;
+  left: 22vw;
+  bottom: -14vw;
+  background: radial-gradient(circle, rgba(176, 107, 255, 0.42), transparent 68%);
+  animation: drift3 29s ease-in-out infinite;
+}
+
+@keyframes drift1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(8vw, 10vh, 0) scale(1.15); }
+}
+
+@keyframes drift2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.1); }
+  50%      { transform: translate3d(-10vw, 14vh, 0) scale(0.92); }
+}
+
+@keyframes drift3 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(0.95); }
+  50%      { transform: translate3d(6vw, -12vh, 0) scale(1.2); }
+}
+
+/* Footballs drifting up the page, each on its own timing. */
+.floater {
+  position: absolute;
+  bottom: -14vh;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+  12%  { opacity: 0.5; }
+  88%  { opacity: 0.5; }
+  100% { transform: translate3d(4vw, -125vh, 0) rotate(300deg); opacity: 0; }
+}
+
+/* Faint contour rings, like a stadium seen from above. */
+.rings {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  translate: -50% -50%;
+  width: min(150vw, 1500px);
+  aspect-ratio: 1;
+  opacity: 0.16;
+  animation: ringSpin 90s linear infinite;
+}
+
+@keyframes ringSpin {
+  to { transform: rotate(360deg); }
+}
+
+.rise {
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respect users who don't want motion — kill every animation above. */
+@media (prefers-reduced-motion: reduce) {
+  .sweep::after,
+  .pulse-dot::after,
+  .rise,
+  .bouncy,
+  .demo-halo::before,
+  .aurora,
+  .floater,
+  .rings,
+  .pitch-anim * {
+    animation: none !important;
+  }
+
+  /* Without their drift animation the floaters would sit stacked off-screen. */
+  @media (prefers-reduced-motion: reduce) {
+    .floater {
+      display: none;
+    }
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
