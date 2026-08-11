@@ -49,7 +49,9 @@
       "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 90)",
       "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 300)",
       "Bash(dig +short A scoreticket.eu @8.8.8.8)",
-      "Bash(dig +short A scoreticket.eu @1.1.1.1)"
+      "Bash(dig +short A scoreticket.eu @1.1.1.1)",
+      "Bash(curl -s -o /dev/null --max-time 10 http://localhost:3000/transfers)",
+      "Bash(curl -s -o /dev/null -w \"  /transfers -> %{http_code}\\\\n\" http://localhost:3000/transfers --max-time 150)"
     ]
   }
 }

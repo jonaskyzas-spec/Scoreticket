@@ -4,6 +4,7 @@ import { readJson, readJsonStale } from '../cache';
 import { SNAPSHOT_TRANSFERS } from '../snapshot';
 import { getPlayerPhotos } from './player-photos';
 import type { Transfer } from './types';
+import { fetchBesoccerTransfers } from './besoccer';
 import { fetchConfirmedTransfers } from './wikipedia';
 
 /**
@@ -13,6 +14,30 @@ import { fetchConfirmedTransfers } from './wikipedia';
 
 const TTL_SECONDS = 60 * 60 * 6;
 const MAX_SHOWN = 12;
+/** The dedicated /transfers page shows far more than the homepage ticker. */
+const MAX_PAGE = 60;
+
+/**
+ * Dedupe key that survives different sources naming the same player differently.
+ *
+ * BeSoccer abbreviates ("B. Guimarães"), Wikipedia doesn't ("Bruno Guimarães"),
+ * and they also disagree on club naming ("Newcastle" vs "Newcastle United") and
+ * on the fee itself (EUR87.5m vs GBP75m — the same deal). Matching on surname
+ * plus a loose destination is what actually collapses them into one row.
+ */
+function dedupeKey(t: Transfer): string {
+  const norm = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9 ]/g, '')
+      .trim();
+
+  const surname = norm(t.player).split(/\s+/).pop() ?? '';
+  const dest = norm(t.toClub).split(/\s+/)[0] ?? '';
+  return `${surname}|${dest}`;
+}
 
 interface PendingFile {
   transfers?: {
@@ -83,10 +108,23 @@ async function readPending(): Promise<Transfer[]> {
 }
 
 async function build(): Promise<Transfer[]> {
-  const [confirmed, pending] = await Promise.all([
+  const [wikipedia, besoccer, pending] = await Promise.all([
     fetchConfirmedTransfers().catch(() => [] as Transfer[]),
+    fetchBesoccerTransfers().catch(() => [] as Transfer[]),
     readPending(),
   ]);
+
+  // Wikipedia first: it carries full player names, which the portrait lookup
+  // needs. BeSoccer fills in deals Wikipedia hasn't recorded yet.
+  const confirmed: Transfer[] = [];
+  const confirmedSeen = new Set<string>();
+  for (const t of [...wikipedia, ...besoccer]) {
+    const key = dedupeKey(t);
+    if (confirmedSeen.has(key)) continue;
+    confirmedSeen.add(key);
+    confirmed.push(t);
+  }
+  confirmed.sort((a, b) => b.feeEurM - a.feeEurM);
 
   /*
    * A Wikipedia hiccup returns zero confirmed transfers, which would otherwise
@@ -98,8 +136,12 @@ async function build(): Promise<Transfer[]> {
     throw new Error('transfers: no confirmed rows scraped — keeping previous board');
   }
 
-  // A deal that has since been confirmed shouldn't also show as a rumour.
-  const confirmedIds = new Set(confirmed.map((t) => t.id));
+  // A deal that has since been confirmed shouldn't also show as a rumour, and a
+  // hand-entered deal should win over the scraped version of the same move.
+  const manualKeys = new Set(pending.map(dedupeKey));
+  const confirmedFiltered = confirmed.filter((t) => !manualKeys.has(dedupeKey(t)));
+
+  const confirmedIds = new Set(confirmedFiltered.map((t) => t.id));
   const rumours = pending.filter((t) => !confirmedIds.has(t.id));
 
   /*
@@ -115,8 +157,8 @@ async function build(): Promise<Transfer[]> {
     ...rumours.filter((t) => t.status === 'pending'),
     ...rumours.filter((t) => t.status === 'denied'),
     ...rumours.filter((t) => t.status === 'confirmed'),
-    ...confirmed,
-  ].slice(0, MAX_SHOWN);
+    ...confirmedFiltered,
+  ].slice(0, MAX_PAGE);
 
   try {
     const photos = await getPlayerPhotos(merged.map((t) => t.player));
@@ -140,6 +182,24 @@ export async function getTransfers(): Promise<Transfer[]> {
   if (stale) return stale.value;
 
   return SNAPSHOT_TRANSFERS;
+}
+
+/** The homepage ticker: a short mixed-status slice, rumours first. */
+export async function getTickerTransfers(): Promise<Transfer[]> {
+  return (await getTransfers()).slice(0, MAX_SHOWN);
+}
+
+/**
+ * The /transfers page: completed deals only, dearest first.
+ *
+ * Rumours are deliberately excluded here — the page is "transfers that have
+ * been made", so a pending story sitting among done deals would misrepresent
+ * both.
+ */
+export async function getConfirmedTransfers(): Promise<Transfer[]> {
+  return (await getTransfers())
+    .filter((t) => t.status === 'confirmed')
+    .sort((a, b) => b.feeEurM - a.feeEurM);
 }
 
 /** Force a rebuild, bypassing the cache. */

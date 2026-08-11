@@ -4,7 +4,7 @@ import { TransferMarket } from '@/components/TransferMarket';
 import { WelcomeBackdrop } from '@/components/WelcomeBackdrop';
 import { getBoard } from '@/lib/board';
 import { COMPETITIONS } from '@/lib/competitions';
-import { getTransfers } from '@/lib/transfers';
+import { getTickerTransfers } from '@/lib/transfers';
 
 export const revalidate = 900;
 
@@ -51,7 +51,7 @@ const FEATURES = [
 
 export default async function WelcomePage() {
   // Fetched together so a slow Wikipedia lookup doesn't serialise behind the board.
-  const [board, transfers] = await Promise.all([getBoard(), getTransfers()]);
+  const [board, transfers] = await Promise.all([getBoard(), getTickerTransfers()]);
   const upcoming = board.matches.filter(
     (m) => m.match.status === 'SCHEDULED' || m.match.status === 'TIMED',
   );
