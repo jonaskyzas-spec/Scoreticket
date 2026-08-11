@@ -45,7 +45,9 @@
       "Bash(curl -s -o /dev/null -w \"  github page -> %{http_code}\\\\n\" https://github.com/jonaskyzas-spec/Scoreticket --max-time 30)",
       "Bash(git ls-remote *)",
       "Bash(git remote *)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 90)",
+      "Bash(curl -s -o /tmp/r.json -w '%{http_code}' -X POST https://scoreticket.vercel.app/api/cron/refresh -H 'Authorization: Bearer 45JSfZ4f3yAF8MScWZ6rfzELjZC4BSg6' --max-time 300)"
     ]
   }
 }

@@ -9,9 +9,17 @@ export const maxDuration = 300;
  *
  * Protected by CRON_SECRET so it isn't publicly triggerable — scraping on
  * demand from an open endpoint is the fastest way to get every source to
- * block you. Point a Vercel Cron / GitHub Action at this every 30–60 minutes.
+ * block you.
+ *
+ * Vercel invokes cron jobs with **GET**, and automatically attaches
+ * `Authorization: Bearer $CRON_SECRET` when that variable is set on the
+ * project. Exporting only POST (as this route originally did) meant Vercel's
+ * own cron hit a 405 and the scheduled refresh silently never ran.
+ *
+ * So both verbs are handled: GET for Vercel's scheduler, POST for the GitHub
+ * Actions workflow and manual curl.
  */
-export async function POST(request: Request) {
+async function handle(request: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret) {
     return NextResponse.json({ error: 'CRON_SECRET is not configured' }, { status: 500 });
@@ -52,3 +60,6 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const GET = handle;
+export const POST = handle;
