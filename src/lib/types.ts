@@ -74,7 +74,8 @@ export type SourceId =
   | 'footballticketnet'
   | 'livefootballtickets'
   | 'viagogo'
-  | 'sportsbreaks';
+  | 'sportsbreaks'
+  | 'p1travel';
 
 /** An event as listed on a ticket site, before it's matched to a fixture. */
 export interface SourceEvent {

@@ -7,6 +7,7 @@ import { footballticketnet } from './footballticketnet';
 import { BlockedError } from './http';
 import { livefootballtickets } from './livefootballtickets';
 import { findBestEvent } from './matching';
+import { p1travel } from './p1travel';
 import { seatpick } from './seatpick';
 import { sportsbreaks } from './sportsbreaks';
 import { stubhub } from './stubhub';
@@ -21,6 +22,7 @@ export const SOURCES: TicketSource[] = [
   stubhub,
   footballticketnet,
   sportsbreaks,
+  p1travel,
   viagogo,
   livefootballtickets,
 ];

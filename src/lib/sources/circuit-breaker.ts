@@ -55,6 +55,7 @@ export async function getAllStatuses(): Promise<SourceStatus[]> {
     'stubhub',
     'footballticketnet',
     'sportsbreaks',
+    'p1travel',
     'livefootballtickets',
     'viagogo',
   ];

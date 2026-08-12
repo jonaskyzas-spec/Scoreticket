@@ -1,5 +1,5 @@
 import { COMPETITION_BY_ID } from '../competitions';
-import { splitTitle } from '../sources/matching';
+import { normaliseTeam, splitTitle } from '../sources/matching';
 import type { Match, SourceEvent, SourceId } from '../types';
 
 /**
@@ -27,7 +27,7 @@ import type { Match, SourceEvent, SourceId } from '../types';
  * meant its events could only ever attach to fixtures another source had
  * already put on the calendar, so most of them never appeared at all.
  */
-const DATED_SOURCES: SourceId[] = ['footballticketnet', 'seatpick', 'sportsbreaks'];
+const DATED_SOURCES: SourceId[] = ['footballticketnet', 'seatpick', 'sportsbreaks', 'p1travel'];
 
 function teamsOf(event: SourceEvent): { home: string; away: string } | null {
   if (event.homeName && event.awayName) {
@@ -48,10 +48,16 @@ function toIsoUtc(startDate: string): string | null {
   return new Date(t).toISOString();
 }
 
-/** Dedupe key: same competition + same two teams + same calendar day. */
+/**
+ * Dedupe key: same competition + same two teams + same calendar day.
+ *
+ * Uses the matcher's club normaliser rather than a naive strip, because sources
+ * disagree on club naming: P1 Travel says "Sevilla" where Football Ticket Net
+ * says "Sevilla FC", and "Levante" vs "Levante UD". A plain lowercase-and-strip
+ * treats those as different clubs and puts the same fixture on the board twice.
+ */
 function fixtureKey(competitionId: string, home: string, away: string, iso: string): string {
-  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return `${competitionId}:${norm(home)}:${norm(away)}:${iso.slice(0, 10)}`;
+  return `${competitionId}:${normaliseTeam(home)}:${normaliseTeam(away)}:${iso.slice(0, 10)}`;
 }
 
 /**

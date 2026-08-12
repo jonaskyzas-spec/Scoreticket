@@ -48,7 +48,11 @@ async function buildBoard(daysAhead: number, forceRefresh: boolean): Promise<Boa
   const targets =
     withFixtures.size > 0
       ? COMPETITIONS.filter((c) => withFixtures.has(c.id))
-      : availableCompetitions();
+      : // No fixtures API means the ticket sites ARE the calendar, and they have
+        // no notion of football-data.org's paid tiers. Gating them to
+        // availableCompetitions() here silently hid Europa League and the other
+        // paid-tier competitions even when a source could supply them.
+        COMPETITIONS;
 
   let eventsBySource: Partial<Record<SourceId, SourceEvent[]>>;
   let sourceReports: SourceScrapeReport[];
