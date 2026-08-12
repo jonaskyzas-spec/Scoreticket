@@ -51,7 +51,8 @@
       "Bash(dig +short A scoreticket.eu @8.8.8.8)",
       "Bash(dig +short A scoreticket.eu @1.1.1.1)",
       "Bash(curl -s -o /dev/null --max-time 10 http://localhost:3000/transfers)",
-      "Bash(curl -s -o /dev/null -w \"  /transfers -> %{http_code}\\\\n\" http://localhost:3000/transfers --max-time 150)"
+      "Bash(curl -s -o /dev/null -w \"  /transfers -> %{http_code}\\\\n\" http://localhost:3000/transfers --max-time 150)",
+      "Bash(curl -s -L --max-time 60 \"https://scoreticket.eu/api/matches?limit=400\")"
     ]
   }
 }

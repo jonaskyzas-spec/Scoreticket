@@ -91,6 +91,33 @@
       "status": "pending",
       "note": "Reported talks",
       "source": "Press reports"
+    },
+    {
+      "player": "Cristian Romero",
+      "fromClub": "Tottenham Hotspur",
+      "toClub": "Atletico Madrid",
+      "feeEurM": 40,
+      "status": "confirmed",
+      "note": "Completed transfer",
+      "source": "Press reports"
+    },
+    {
+      "player": "Enzo Fernández",
+      "fromClub": "Chelsea",
+      "toClub": "Manchester City",
+      "feeEurM": 120,
+      "status": "pending",
+      "note": "Manchester City interested",
+      "source": "Press reports"
+    },
+    {
+      "player": "Bradley Barcola",
+      "fromClub": "Paris Saint-Germain",
+      "toClub": "Liverpool",
+      "feeEurM": 70,
+      "status": "pending",
+      "note": "Liverpool interested",
+      "source": "Press reports"
     }
   ]
 }
