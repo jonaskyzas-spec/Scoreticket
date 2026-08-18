@@ -25,8 +25,8 @@
       "fromClub": "Atletico Madrid",
       "toClub": "Barcelona",
       "feeEurM": 90,
-      "status": "pending",
-      "note": "Reported talks — fee not agreed",
+      "status": "denied",
+      "note": "Move to Barcelona denied",
       "source": "Press reports"
     },
     {
@@ -34,8 +34,8 @@
       "fromClub": "Real Madrid",
       "toClub": "Aston Villa",
       "feeEurM": 50,
-      "status": "pending",
-      "note": "Possible move — reported interest",
+      "status": "denied",
+      "note": "Staying at Real Madrid — loan denied",
       "source": "Press reports"
     },
     {
@@ -77,10 +77,10 @@
     {
       "player": "Rodri",
       "fromClub": "Manchester City",
-      "toClub": "Barcelona / Real Madrid",
+      "toClub": "Barcelona",
       "feeEurM": 80,
-      "status": "pending",
-      "note": "Possible move — destination undecided",
+      "status": "confirmed",
+      "note": "Completed transfer",
       "source": "Press reports"
     },
     {
@@ -88,8 +88,8 @@
       "fromClub": "Barcelona",
       "toClub": "Paris Saint-Germain",
       "feeEurM": 50,
-      "status": "pending",
-      "note": "Reported talks",
+      "status": "confirmed",
+      "note": "Completed transfer",
       "source": "Press reports"
     },
     {
